@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<header class="masthead mb-auto" th:fragment="header">
+    <div class="inner d-flex justify-content-between px-4 py-2">
+
+        <!-- Logo + Title -->
+        <div class="d-flex align-items-center">
+            <img th:src="@{/images/myRent.png}" alt="Logo" width="180" height="120" class="me-2">
+            <h3 class="masthead-brand">MyRentalApp</h3>
+        </div>
+
+        <!-- Navigation -->
+        <div class="d-flex align-items-center justify-content-between w-100">
+        <nav class="nav nav-masthead d-flex align-items-center gap-4">
+            <a class="nav-link active" href="/">Home</a>
+
+            <!-- Search Bar -->
+            <div sec:authorize="isAuthenticated()" class="d-flex align-items-center">
+                <form class="d-flex" method="get" action="/search">
+                    <input class="form-control me-2" type="search" name="query" placeholder="Search..." aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+
+            <!-- Authenticated Links -->
+            <div sec:authorize="isAuthenticated()" class="d-flex align-items-center gap-3">
+                <a class="btn btn-primary" href="/profile">Profile</a>
+                <a th:if="${hasRentalApplications}" class="btn btn-warning" href="/rental-applications">My Rental Applications</a>
+                <a th:if="${hasPropertyApplications}" class="btn btn-info" href="/property-applications">Property Applications</a>
+
+                <!-- Logout Form -->
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <input type="submit" class="btn btn-danger" value="Sign Out"/>
+                </form>
+            </div>
+
+            <!-- Login/Register -->
+            <div sec:authorize="!isAuthenticated()" class="d-flex align-items-center gap-3">
+                <a class="nav-link" href="/login">Login</a>
+                <a class="nav-link" href="/register">Register</a>
+            </div>
+        </nav>
+        </div>
+    </div>
+</header>
+
+</body>
+</html>
