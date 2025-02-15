@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{page_layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Pending Properties</title>
+</head>
+<body>
+<main role="main" class="container" layout:fragment="main-content">
+    <h2>Pending Property Applications</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Location</th>
+            <th>Owner</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="property : ${pendingProperties}">
+            <td th:text="${property.id}"></td>
+            <td th:text="${property.location}"></td>
+            <td th:text="${property.owner.firstName + ' ' + property.owner.lastName}"></td>
+            <td th:text="${property.status}"></td>
+            <td>
+                <form th:action="@{/admin/property-applications/{id}/approve(id=${property.id})}" method="post">
+                    <button type="submit" class="btn btn-success">Approve</button>
+                </form>
+                <form th:action="@{/admin/property-applications/{id}/reject(id=${property.id})}" method="post">
+                    <button type="submit" class="btn btn-danger">Reject</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</main>
+</body>
+</html>

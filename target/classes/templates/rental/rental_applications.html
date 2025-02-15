@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{page_layout/layout}"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rental Applications</title>
+</head>
+<body>
+<div layout:fragment="main-content">
+    <h1 class="text-center">Rental Applications</h1>
+
+    <!-- Show if there are rental applications -->
+    <div th:if="${not #lists.isEmpty(rentals)}">
+        <div class="d-flex justify-content-center">
+            <table class="table table-bordered w-75 text-center">
+                <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Property</th>
+                    <th>Owner</th>
+                    <th>Tenants</th>
+                    <th>Status</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="rental : ${rentals}">
+                    <td th:text="${rental.id}"></td>
+                    <td>
+                        <a th:if="${rental.property != null}"
+                           th:href="@{'/properties/' + ${rental.property.id}}"
+                           th:text="${rental.property.location}">Property</a>
+                    </td>
+                    <td>
+                        <span th:if="${rental.owner != null}"
+                              th:text="${rental.owner.firstName + ' ' + rental.owner.lastName}">
+                        </span>
+                    </td>
+                    <td>
+                        <ul>
+                            <li th:each="tenant : ${rental.tenants}"
+                                th:text="${tenant.firstName + ' ' + tenant.lastName}">
+                            </li>
+                        </ul>
+                    </td>
+                    <td th:text="${rental.status}"></td>
+                    <td th:text="${rental.startDate}"></td>
+                    <td th:text="${rental.endDate}"></td>
+                    <td>
+                        <th:block th:if="${rental.status == 'PENDING'}">
+                        <form th:action="@{/rentals/applications/rental/approve/{id}(id=${rental.id})}"
+                              method="post"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                        </form>
+
+                        <form th:action="@{/rentals/applications/rental/reject/{id}(id=${rental.id})}"
+                              method="post"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                        </th:block>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Show message if no rental applications exist -->
+    <div th:if="${#lists.isEmpty(rentals)}" class="text-center">
+        <p>No rental applications found!</p>
+    </div>
+
+</div>
+</body>
+</html>
