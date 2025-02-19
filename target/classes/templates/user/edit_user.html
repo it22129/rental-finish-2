@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{page_layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>User Details</title>
+    <style>
+        /* Centering and styling */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 80%;
+            max-width: 800px;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        td {
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        /* Button styling */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-primary { background-color: #007bff; }
+        .btn-danger { background-color: #dc3545; }
+        .btn-success { background-color: #28a745; }
+        .btn-warning { background-color: #ffc107; }
+    </style>
+</head>
+<body>
+<div layout:fragment="main-content">
+    <div class="container">
+        <h2>User Details</h2>
+
+        <!-- Display User Information -->
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Roles</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.first_name}"></td>
+                <td th:text="${user.last_name}"></td>
+                <td>
+                    <span th:each="role : ${user.roles}">
+                        <span th:text="${role.name}"></span>
+                        <a class="btn btn-danger btn-sm"
+                           th:href="@{/user/role/delete/{id}/{role_id}(id=${user.id},role_id=${role.id})}"
+                           th:text="'Delete Role ✖'"></a>
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Buttons for actions -->
+        <div class="btn-container">
+            <a th:href="@{/user/delete/{id}(id=${user.id})}" class="btn btn-danger"
+               onclick="return confirm('Are you sure you want to delete this user?')">Delete User</a>
+
+            <div th:if="${user.roles.isEmpty()}"> <!-- Εφόσον ο κάθε user θα είναι ή tenant ή owner , αν έχει
+                                                        ήδη έναν ρόλο δεν θα εμφανίζονταιτα κουμπιά
+                                                        για να κάνει add έναν ρόλο ο admin, μόνο αν δεν έχει κανέναν ρόλο θα μπορεί να του προστεθεί κάποιος ρόλος-->
+                <a th:each="role : ${roles}"
+                   th:if="${!user.roles.contains(role)}"
+                   th:href="@{/user/role/add/{id}/{role_id}(id=${user.id},role_id=${role.id})}"
+                   class="btn btn-success"
+                   th:text="'Add ' + ${role.name}"></a>
+            </div>
+        </div>
+
+        <br>
+        <a href="/users" class="btn btn-primary">Back to Users List</a>
+    </div>
+</div>
+</body>
+</html>
