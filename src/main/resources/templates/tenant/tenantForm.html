@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{page_layout/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tenant Form</title>
+</head>
+
+<body>
+<div layout:fragment="main-content">
+    <h1 class="text-center">Tenant Form</h1>
+
+    <!-- Success message displayed if it exists -->
+    <div th:if="${successMessage != null}" class="alert alert-success">
+        <p th:text="${successMessage}"></p>
+    </div>
+
+    <form th:action="@{/tenant/new}" method="post" th:object="${tenant}">
+        <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" th:field="*{firstName}" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" th:field="*{lastName}" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" th:field="*{username}" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Tenant</button>
+    </form>
+</div>
+</body>
+</html>
